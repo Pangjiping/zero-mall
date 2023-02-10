@@ -25,11 +25,6 @@ user-rpc:
 	cd ./mall/service/user/rpc && \
 	goctl rpc protoc user.proto --go_out=./types --go-grpc_out=./types --zrpc_out=.
 
-user:
-	user-model
-	user-api
-	user-rpc
-
 start-user-rpc:
 	cd ./mall/service/user/rpc && \
 	go run user.go -f etc/user.yaml
@@ -38,8 +33,24 @@ start-user-api:
 	cd ./mall/service/user/api && \
 	go run user.go -f etc/user.yaml
 
-start-user:
-	start-user-rpc
-	start-user-api
+product-model:
+	cd ./mall/service/product && \
+	goctl model mysql ddl -src ./model/product.sql -dir ./model -c
+
+product-api:
+	cd ./mall/service/product && \
+	goctl api go -api ./api/product.api -dir ./api
+
+product-rpc:
+	cd ./mall/service/product/rpc && \
+	goctl rpc protoc product.proto --go_out=./types --go-grpc_out=./types --zrpc_out=.
+
+start-product-rpc:
+	cd ./mall/service/product/rpc && \
+	go run product.go -f etc/product.yaml
+
+start-product-api:
+	cd ./mall/service/product/api && \
+	go run product.go -f etc/product.yaml
 
 .PHONY: dev-dep orch-golang orch-base orch-all user-model user-api user-rpc user start-user-rpc start-user-api start-user
